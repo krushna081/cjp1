@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import { Analytics } from '@vercel/analytics/react'
 import { Layout } from './components/layout'
 import { HomePage, MembersPage, MeetingsPage, ManifestoPage, FounderPage, ContactPage, JoinPage, IndiaProblemsPage, WomenSafetyPage, ImproveCJPPage } from './pages'
 
@@ -28,6 +29,7 @@ function App() {
           </Route>
         </Routes>
       </AnimatePresence>
+      <Analytics />
     </BrowserRouter>
   )
 }
