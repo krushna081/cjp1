@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Input, RadioGroup, Button } from '../../components/ui'
 import LocationSelect from '../../components/ui/LocationSelect'
 import SuccessPopup from '../../components/ui/SuccessPopup'
-import api from '../../api/axios'
+import { supabase } from '../../lib/supabase'
 import { validateEmail, validatePhone } from '../../utils'
 
 const pageVariants = {
@@ -81,11 +81,22 @@ export default function JoinPage() {
     setIsLoading(true)
     
     try {
-      await api.post('/api/members', {
-        ...formData,
-        phone: formData.phone.replace(/\D/g, ''),
-        joinedAt: new Date().toISOString()
-      })
+      const { error } = await supabase.from('members').insert([
+        {
+          full_name: formData.fullName,
+          phone: formData.phone.replace(/\D/g, ''),
+          email: formData.email,
+          state: formData.state,
+          district: formData.district,
+          village: formData.village || '',
+          twitter_handle: formData.twitterHandle || '',
+          chronically_online: formData.chronicallyOnline,
+          lazy_member: formData.lazy,
+          cockroach_identity: formData.cockroach
+        }
+      ])
+      
+      if (error) throw error
       
       setFormData({
         fullName: '',

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MEETING_TYPES } from '../../constants'
 import { formatDateShort } from '../../utils'
-import api from '../../api/axios'
+import { supabase } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
 
 const pageVariants = {
@@ -22,9 +22,9 @@ export default function MeetingsPage() {
 
   const fetchMeetings = async () => {
     try {
-      const response = await api.get('/api/meetings')
-      if (response.data?.data?.length > 0) {
-        setMeetings(response.data.data)
+      const response = await supabase.from('meetings').select('*').order('meeting_date', { ascending: true })
+      if (response.data?.length > 0) {
+        setMeetings(response.data)
       } else {
         setMeetings(getDefaultMeetings())
       }
@@ -122,12 +122,12 @@ export default function MeetingsPage() {
           ) : (
             <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
               {filteredMeetings.map((meeting, index) => {
-                const { day, month } = formatDateShort(meeting.date)
-                const type = MEETING_TYPES[meeting.meetingType] || MEETING_TYPES.meeting
+                const { day, month } = formatDateShort(meeting.meeting_date)
+                const type = MEETING_TYPES[meeting.meeting_type] || MEETING_TYPES.meeting
 
                 return (
                   <motion.div
-                    key={meeting._id || index}
+                    key={meeting.id || index}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -150,7 +150,7 @@ export default function MeetingsPage() {
                         </h3>
                         
                         <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] sm:text-xs text-ink-3 mb-3">
-                          <span>🕐 {meeting.time}</span>
+                          <span>🕐 {meeting.meeting_time}</span>
                           <span>📍 {meeting.location}</span>
                         </div>
                         
@@ -158,9 +158,9 @@ export default function MeetingsPage() {
                           {meeting.description}
                         </p>
                         
-                        {meeting.joinLink && (
+                        {meeting.join_link && (
                           <a
-                            href={meeting.joinLink}
+                            href={meeting.join_link}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 bg-saffron-deep text-paper font-condensed font-semibold text-xs tracking-[0.15em] uppercase px-4 sm:px-5 py-2 sm:py-2.5 border-2 border-ink hover:bg-saffron-deep/90 transition-all"

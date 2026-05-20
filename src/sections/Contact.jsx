@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import api from '../api/axios'
+import { supabase } from '../lib/supabase'
 import LocationSelect from '../components/LocationSelect'
 
 function Contact({ onSuccess }) {
@@ -71,11 +71,22 @@ function Contact({ onSuccess }) {
     setIsLoading(true)
     
     try {
-      await api.post('/api/members', {
-        ...formData,
-        phone: formData.phone.replace(/\D/g, ''),
-        joinedAt: new Date().toISOString(),
-      })
+      const { error } = await supabase.from('members').insert([
+        {
+          full_name: formData.fullName,
+          phone: formData.phone.replace(/\D/g, ''),
+          email: formData.email,
+          state: formData.state,
+          district: formData.district,
+          village: formData.village || '',
+          twitter_handle: formData.twitterHandle || '',
+          chronically_online: formData.chronicallyOnline,
+          lazy_member: formData.lazy,
+          cockroach_identity: formData.cockroach
+        }
+      ])
+      
+      if (error) throw error
       
       setFormData({
         fullName: '',

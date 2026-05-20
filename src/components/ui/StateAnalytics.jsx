@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import api from '../../api/axios'
+import { supabase } from '../../lib/supabase'
 import StateStats from './StateStats'
 
 export default function StateAnalytics() {
@@ -19,9 +19,37 @@ export default function StateAnalytics() {
 
   const fetchStats = async () => {
     try {
-      const response = await api.get('/api/stats')
+      const TOTAL_INDIAN_STATES = 28
+      const response = await supabase.from('members').select('state')
+      
       if (response.data) {
-        setStats(response.data)
+        const totalMembers = response.data.length
+        
+        const stateCounts = response.data.reduce((acc, member) => {
+          if (member.state) {
+            acc[member.state] = (acc[member.state] || 0) + 1
+          }
+          return acc
+        }, {})
+        
+        const stateStats = Object.entries(stateCounts)
+          .map(([state, count]) => ({ state, count }))
+          .sort((a, b) => b.count - a.count)
+        
+        const statesWithMembers = stateStats.length
+        const nationalReach = Math.round((statesWithMembers / TOTAL_INDIAN_STATES) * 100)
+        
+        setStats({
+          totalMembers,
+          statesWithMembers,
+          totalStates: TOTAL_INDIAN_STATES,
+          nationalReach,
+          topStates: stateStats.slice(0, 6).map(s => ({
+            state: s.state,
+            count: s.count,
+            percentage: totalMembers > 0 ? Math.round((s.count / totalMembers) * 100) : 0
+          }))
+        })
       }
     } catch (error) {
       setStats({

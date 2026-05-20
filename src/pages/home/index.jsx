@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Marquee, StateAnalytics, CompactFounder } from '../../components/ui'
 import { MANIFESTO_DEMANDS, ELIGIBILITY_CRITERIA, MEETING_TYPES } from '../../constants'
 import { formatDateShort } from '../../utils'
-import api from '../../api/axios'
+import { supabase } from '../../lib/supabase'
 import { useState, useEffect } from 'react'
 
 const pageVariants = {
@@ -46,13 +46,45 @@ export default function HomePage() {
 
   const fetchData = async () => {
     try {
-      const [statsRes, meetingsRes] = await Promise.all([
-        api.get('/api/stats'),
-        api.get('/api/meetings')
+      const TOTAL_INDIAN_STATES = 28
+      
+      const [membersResult, meetingsResult] = await Promise.all([
+        supabase.from('members').select('state'),
+        supabase.from('meetings').select('*').order('meeting_date', { ascending: true }).limit(3)
       ])
       
-      if (statsRes.data) setStats(prev => ({ ...prev, ...statsRes.data }))
-      if (meetingsRes.data?.data) setMeetings(meetingsRes.data.data.slice(0, 3))
+      if (membersResult.data) {
+        const totalMembers = membersResult.data.length
+        
+        const stateCounts = membersResult.data.reduce((acc, member) => {
+          if (member.state) {
+            acc[member.state] = (acc[member.state] || 0) + 1
+          }
+          return acc
+        }, {})
+        
+        const stateStats = Object.entries(stateCounts)
+          .map(([state, count]) => ({ state, count }))
+          .sort((a, b) => b.count - a.count)
+        
+        const statesWithMembers = stateStats.length
+        const nationalReach = Math.round((statesWithMembers / TOTAL_INDIAN_STATES) * 100)
+        
+        setStats({
+          totalMembers,
+          totalMeetings: 0,
+          activeVolunteers: Math.floor(totalMembers * 0.1),
+          statesWithMembers,
+          nationalReach,
+          topStates: stateStats.slice(0, 6).map(s => ({
+            state: s.state,
+            count: s.count,
+            percentage: totalMembers > 0 ? Math.round((s.count / totalMembers) * 100) : 0
+          }))
+        })
+      }
+      
+      if (meetingsResult.data) setMeetings(meetingsResult.data.slice(0, 3))
     } catch (error) {
       console.log('Using default data')
     }
@@ -72,37 +104,70 @@ export default function HomePage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 lg:py-16 relative z-10">
-          <div className="max-w-3xl">
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.div variants={itemVariants} className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-blood border border-blood rounded-full px-3 py-1.5 mb-4">
-                <span className="w-1.5 h-1.5 rounded-full bg-blood animate-livepulse" />
-                Party Launch · Live since yesterday
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left - Text Content */}
+            <div className="max-w-xl">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <motion.div variants={itemVariants} className="inline-flex items-center gap-2 font-mono text-[10px] tracking-[0.2em] uppercase text-blood border border-blood rounded-full px-3 py-1.5 mb-4">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blood animate-livepulse" />
+                  Party Launch · Live since yesterday
+                </motion.div>
+
+                <motion.h1 variants={itemVariants} className="font-display text-[36px] sm:text-[48px] lg:text-[72px] xl:text-[88px] leading-[0.95] tracking-[-0.01em] text-ink mb-4">
+                  Voice of the<br />
+                  <span className="text-saffron-deep">Lazy</span> &<br />
+                  <span className="text-green italic font-serif">Unemployed.</span>
+                </motion.h1>
+
+                <motion.p variants={itemVariants} className="font-sans text-base leading-relaxed text-ink-2 max-w-lg mb-6">
+                  A political party for the people the system forgot to count.
+                  Five demands. Zero sponsors. One large, stubborn swarm.
+                </motion.p>
+
+                <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 mb-8">
+                  <Link to="/join" className="inline-flex items-center gap-2 bg-saffron-deep text-paper font-condensed font-bold text-xs tracking-[0.18em] uppercase px-5 py-2.5 border-2 border-ink shadow-[4px_4px_0_var(--ink)] hover:shadow-[2px_2px_0_var(--ink)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+                    Join the Party <span>→</span>
+                  </Link>
+                  <Link to="/manifesto" className="font-condensed font-medium text-xs tracking-[0.18em] uppercase text-ink border-b-2 border-ink pb-1 hover:text-saffron-deep hover:border-saffron-deep transition-colors">
+                    Read Manifesto
+                  </Link>
+                </motion.div>
+
+                {/* Hero Stats Strip */}
+                <motion.div variants={itemVariants} className="grid grid-cols-4 gap-4 pt-6 border-t border-ink/20">
+                  <div><span className="font-display text-2xl lg:text-3xl text-ink">5</span><span className="block font-mono text-[10px] tracking-wider uppercase text-ink-3">Demands</span></div>
+                  <div><span className="font-display text-2xl lg:text-3xl text-ink">0</span><span className="block font-mono text-[10px] tracking-wider uppercase text-ink-3">Sponsors</span></div>
+                  <div><span className="font-display text-2xl lg:text-3xl text-ink">∞</span><span className="block font-mono text-[10px] tracking-wider uppercase text-ink-3">Patience</span></div>
+                  <div><span className="font-display text-2xl lg:text-3xl text-ink">1</span><span className="block font-mono text-[10px] tracking-wider uppercase text-ink-3">Founder</span></div>
+                </motion.div>
               </motion.div>
+            </div>
 
-              <motion.h1 variants={itemVariants} className="font-display text-[36px] sm:text-[48px] lg:text-[72px] xl:text-[88px] leading-[0.95] tracking-[-0.01em] text-ink mb-4">
-                Voice of the<br />
-                <span className="text-saffron-deep">Lazy</span> &<br />
-                <span className="text-green italic font-serif">Unemployed.</span>
-              </motion.h1>
-
-              <motion.p variants={itemVariants} className="font-sans text-base leading-relaxed text-ink-2 max-w-lg mb-6">
-                A political party for the people the system forgot to count.
-                Five demands. Zero sponsors. One large, stubborn swarm.
-              </motion.p>
-
-              <motion.div variants={itemVariants} className="flex flex-wrap items-center gap-3 mb-8">
-                <Link to="/join" className="inline-flex items-center gap-2 bg-saffron-deep text-paper font-condensed font-bold text-xs tracking-[0.18em] uppercase px-5 py-2.5 border-2 border-ink shadow-[4px_4px_0_var(--ink)] hover:shadow-[2px_2px_0_var(--ink)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
-                  Join the Party <span>→</span>
-                </Link>
-                <Link to="/manifesto" className="font-condensed font-medium text-xs tracking-[0.18em] uppercase text-ink border-b-2 border-ink pb-1 hover:text-saffron-deep hover:border-saffron-deep transition-colors">
-                  Read Manifesto
-                </Link>
-              </motion.div>
-            </motion.div>
+            {/* Right - Poster Frame */}
+            <div className="hidden lg:block relative">
+              <div className="relative transform rotate-[1.5deg] bg-paper-2 border-[3px] border-ink shadow-[12px_12px_0_var(--ink)] shadow-[12px_12px_0_4px_var(--saffron-deep)] overflow-hidden">
+                <div className="flex justify-between items-center bg-saffron-deep text-paper px-4 py-2 border-b-2 border-ink">
+                  <span className="font-mono text-[10px] tracking-wider uppercase">Official Poster · No. 001</span>
+                  <span className="text-[10px]">★ ★ ★</span>
+                </div>
+                <img 
+                  src="/img/banner-1.webp" 
+                  alt="The Founder addresses the swarm" 
+                  className="w-full h-auto object-cover"
+                />
+                <div className="bg-ink text-paper px-6 py-5 text-center">
+                  <p className="font-mono text-[10px] tracking-wider uppercase text-saffron-2 mb-2">Together · Resilient · Unstoppable</p>
+                  <p className="font-display text-lg leading-tight">"They tried to step on us.<br/>We came back."</p>
+                </div>
+                <span className="absolute top-10 -right-6 bg-blood text-paper font-condensed font-bold text-xs tracking-wider uppercase px-4 py-1 border-2 border-paper rotate-[15deg]">
+                  Approved
+                </span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -201,12 +266,12 @@ export default function HomePage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {meetings.length > 0 ? meetings.map((meeting, index) => {
-              const { day, month } = formatDateShort(meeting.date)
-              const type = MEETING_TYPES[meeting.meetingType] || MEETING_TYPES.meeting
+              const { day, month } = formatDateShort(meeting.meeting_date)
+              const type = MEETING_TYPES[meeting.meeting_type] || MEETING_TYPES.meeting
 
               return (
                 <motion.div
-                  key={meeting._id || index}
+                  key={meeting.id || index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -223,7 +288,7 @@ export default function HomePage() {
                       <span className="font-mono text-[10px] tracking-wider uppercase text-ink-3">{type.label}</span>
                       <h3 className="font-display text-base text-ink leading-tight mt-1">{meeting.title}</h3>
                       <p className="font-mono text-[10px] text-ink-3 mt-1">
-                        🕐 {meeting.time} · 📍 {meeting.location}
+                        🕐 {meeting.meeting_time} · 📍 {meeting.location}
                       </p>
                     </div>
                   </div>
@@ -296,6 +361,8 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      
 
       {/* Founder Section - Compact */}
       <section className="py-8 sm:py-10 lg:py-12 bg-paper border-b-2 border-ink">

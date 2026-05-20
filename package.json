@@ -2,6 +2,7 @@
   "name": "cockroach-janta-party",
   "private": true,
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "vite",
@@ -9,17 +10,14 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
+"dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "axios": "^1.6.2",
+    "framer-motion": "^10.16.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "framer-motion": "^10.16.4",
-    "recharts": "^2.10.1",
-    "axios": "^1.6.2",
-    "express": "^4.18.2",
-    "mongoose": "^8.0.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1"
+    "recharts": "^2.10.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",

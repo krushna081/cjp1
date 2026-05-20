@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import api from '../api/axios'
+import { supabase } from '../lib/supabase'
 
 function Members() {
   const [members, setMembers] = useState([])
@@ -13,9 +13,9 @@ function Members() {
 
   const fetchMembers = async () => {
     try {
-      const response = await api.get('/api/members')
-      if (response.data?.data?.length > 0) {
-        setMembers(response.data.data)
+      const response = await supabase.from('members').select('*').order('created_at', { ascending: false }).limit(8)
+      if (response.data?.length > 0) {
+        setMembers(response.data)
       } else {
         setMembers(getDefaultMembers())
       }
@@ -111,7 +111,7 @@ function Members() {
           >
             {members.slice(0, 8).map((member, index) => (
               <motion.div
-                key={member._id || index}
+                key={member.id || index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -120,14 +120,14 @@ function Members() {
               >
                 <div className="flex items-center gap-4 mb-4">
                   <div className="w-14 h-14 rounded-full bg-ink text-paper flex items-center justify-center font-display text-lg">
-                    {getInitials(member.fullName)}
+                    {getInitials(member.full_name)}
                   </div>
                   <div>
                     <h4 className="font-display text-lg text-ink leading-tight group-hover:text-saffron-deep transition-colors">
-                      {member.fullName}
+                      {member.full_name}
                     </h4>
                     <span className="font-mono text-[10px] tracking-[0.15em] uppercase text-ink-3">
-                      {formatDate(member.joinedAt)}
+                      {formatDate(member.created_at)}
                     </span>
                   </div>
                 </div>

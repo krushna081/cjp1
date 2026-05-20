@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Select } from '../../components/ui'
 import { INDIA_STATES } from '../../constants'
 import { formatDate, getInitials } from '../../utils'
-import api from '../../api/axios'
+import { supabase } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
 
 const pageVariants = {
@@ -33,22 +33,21 @@ export default function MembersPage() {
 
   const fetchMembers = async () => {
     try {
-      const [membersRes, statsRes] = await Promise.all([
-        api.get('/api/members'),
-        api.get('/api/stats')
+      const [membersRes] = await Promise.all([
+        supabase.from('members').select('*').order('created_at', { ascending: false }).limit(100)
       ])
       
-      if (membersRes.data?.data) {
-        setMembers(membersRes.data.data)
-        setLoading(false)
-      }
-      if (statsRes.data) {
+      if (membersRes.data) {
+        setMembers(membersRes.data)
+        
+        const uniqueStates = new Set(membersRes.data.map(m => m.state).filter(Boolean))
         setStats({
-          total: statsRes.data.totalMembers || 847,
-          states: statsRes.data.statesCount || 18,
-          districts: statsRes.data.districtsCount || 86
+          total: membersRes.data.length,
+          states: uniqueStates.size,
+          districts: 86
         })
       }
+      setLoading(false)
     } catch (error) {
       setLoading(false)
       setMembers(getDefaultMembers())
@@ -218,7 +217,7 @@ export default function MembersPage() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
                 {currentMembers.map((member, index) => (
                   <motion.div
-                    key={member._id || index}
+                    key={member.id || index}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
@@ -226,12 +225,12 @@ export default function MembersPage() {
                   >
                     <div className="flex items-start gap-4 mb-4">
                       <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-ink text-paper flex items-center justify-center font-display text-lg sm:text-xl flex-shrink-0 group-hover:bg-saffron-deep transition-colors">
-                        {getInitials(member.fullName)}
+                        {getInitials(member.full_name)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-display text-lg sm:text-xl text-ink leading-tight truncate">{member.fullName}</h3>
+                        <h3 className="font-display text-lg sm:text-xl text-ink leading-tight truncate">{member.full_name}</h3>
                         <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-ink-3">
-                          Joined {formatDate(member.joinedAt)}
+                          Joined {formatDate(member.created_at)}
                         </span>
                       </div>
                     </div>
@@ -245,10 +244,10 @@ export default function MembersPage() {
                         <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-saffron-deep">District</span>
                         <span className="text-ink-2 font-sans text-sm">{member.district}</span>
                       </div>
-                      {member.twitterHandle && (
+                      {member.twitter_handle && (
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.12em] uppercase text-saffron-deep">Twitter</span>
-                          <span className="text-ink-2 font-sans text-sm">{member.twitterHandle}</span>
+                          <span className="text-ink-2 font-sans text-sm">{member.twitter_handle}</span>
                         </div>
                       )}
                     </div>

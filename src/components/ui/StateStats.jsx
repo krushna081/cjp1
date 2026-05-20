@@ -1,9 +1,19 @@
 import { motion } from 'framer-motion'
 
 export default function StateStats({ stats }) {
+  const topStates = stats?.topStates || []
+  
+  if (topStates.length === 0) {
+    return (
+      <div className="font-mono text-sm text-ink-3 italic">
+        No member data available yet
+      </div>
+    )
+  }
+  
   return (
     <div className="flex flex-wrap gap-3">
-      {stats.topStates.map((item, index) => (
+      {topStates.map((item, index) => (
         <motion.div
           key={item.state}
           initial={{ opacity: 0, y: 10 }}

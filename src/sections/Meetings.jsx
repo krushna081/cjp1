@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import api from '../api/axios'
+import { supabase } from '../lib/supabase'
 
 const meetingTypes = {
   rally: { icon: '🎪', label: 'Rally' },
@@ -19,9 +19,9 @@ function Meetings() {
 
   const fetchMeetings = async () => {
     try {
-      const response = await api.get('/api/meetings')
-      if (response.data?.data?.length > 0) {
-        setMeetings(response.data.data)
+      const response = await supabase.from('meetings').select('*').order('meeting_date', { ascending: true })
+      if (response.data?.length > 0) {
+        setMeetings(response.data)
       } else {
         setMeetings(getDefaultMeetings())
       }
@@ -118,12 +118,12 @@ function Meetings() {
 
         <div className="grid md:grid-cols-2 gap-6">
           {meetings.slice(0, 4).map((meeting, index) => {
-            const { day, month } = formatDate(meeting.date)
-            const type = meetingTypes[meeting.meetingType] || meetingTypes.meeting
+            const { day, month } = formatDate(meeting.meeting_date)
+            const type = meetingTypes[meeting.meeting_type] || meetingTypes.meeting
 
             return (
               <motion.div
-                key={meeting._id || index}
+                key={meeting.id || index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -147,7 +147,7 @@ function Meetings() {
                     </h3>
 
                     <div className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] tracking-[0.1em] text-ink-3 mb-3">
-                      <span>🕐 {meeting.time}</span>
+                      <span>🕐 {meeting.meeting_time}</span>
                       <span>📍 {meeting.location}</span>
                     </div>
 
@@ -155,9 +155,9 @@ function Meetings() {
                       {meeting.description}
                     </p>
 
-                    {meeting.joinLink && (
+                    {meeting.join_link && (
                       <a
-                        href={meeting.joinLink}
+                        href={meeting.join_link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 font-condensed font-semibold text-xs tracking-[0.2em] uppercase text-paper bg-ink px-4 py-2 border-2 border-ink hover:bg-saffron-deep hover:border-saffron-deep transition-all"
