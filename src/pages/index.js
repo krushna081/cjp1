@@ -1,0 +1,7 @@
+export { default as HomePage } from './home'
+export { default as MembersPage } from './members'
+export { default as MeetingsPage } from './meetings'
+export { default as ManifestoPage } from './manifesto'
+export { default as FounderPage } from './founder'
+export { default as ContactPage } from './contact'
+export { default as JoinPage } from './join'
