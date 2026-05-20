@@ -1,13 +1,11 @@
-import { INDIA_STATES, LOCATION_DATA } from '../../constants'
+import { INDIA_STATES } from '../../constants'
 
 export default function LocationSelect({ formData, setFormData, errors }) {
   const states = INDIA_STATES
-  const districts = formData.state ? Object.keys(LOCATION_DATA[formData.state] || {}) : []
 
   const handleChange = (field, value) => {
     const resets = {
       state: { district: '' },
-      district: { village: '' }
     }
 
     setFormData(prev => ({
@@ -52,7 +50,7 @@ export default function LocationSelect({ formData, setFormData, errors }) {
         )}
       </div>
 
-      <div className="relative">
+      <div>
         <label className="block mb-2">
           <span className={`font-mono text-[10px] sm:text-[10.5px] tracking-[0.15em] sm:tracking-[0.22em] uppercase ${
             errors.district ? 'text-blood' : 'text-ink-2'
@@ -60,27 +58,17 @@ export default function LocationSelect({ formData, setFormData, errors }) {
             District *
           </span>
         </label>
-        <div className="relative">
-          <select
-            name="district"
-            value={formData.district}
-            onChange={(e) => handleChange('district', e.target.value)}
-            disabled={!formData.state}
-            className={`w-full bg-paper border-2 px-4 py-3 font-sans text-sm sm:text-base text-ink appearance-none cursor-pointer transition-all duration-200 ${
-              errors.district ? 'border-blood' : 'border-ink'
-            } ${!formData.state ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            <option value="">Select your district</option>
-            {districts.map(district => (
-              <option key={district} value={district}>{district}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-            <svg className="w-4 h-4 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
+        <input
+          type="text"
+          name="district"
+          value={formData.district}
+          onChange={(e) => handleChange('district', e.target.value)}
+          disabled={!formData.state}
+          placeholder="Enter your district name"
+          className={`w-full bg-paper border-2 px-4 py-3 font-sans text-sm sm:text-base text-ink transition-all duration-200 focus:border-saffron-deep focus:shadow-[3px_3px_0_var(--saffron-deep)] focus:outline-none ${
+            errors.district ? 'border-blood' : 'border-ink'
+          } ${!formData.state ? 'opacity-50 cursor-not-allowed' : ''}`}
+        />
         {errors.district && (
           <span className="text-blood text-xs mt-1 block font-mono">{errors.district}</span>
         )}
@@ -97,7 +85,7 @@ export default function LocationSelect({ formData, setFormData, errors }) {
           name="village"
           value={formData.village}
           onChange={(e) => setFormData(prev => ({ ...prev, village: e.target.value }))}
-          placeholder="Enter your village or town name"
+          placeholder="Enter your village or town name (optional)"
           className="w-full bg-paper border-2 border-ink px-4 py-3 font-sans text-sm sm:text-base text-ink transition-all duration-200 focus:border-saffron-deep focus:shadow-[3px_3px_0_var(--saffron-deep)] focus:outline-none"
         />
       </div>
