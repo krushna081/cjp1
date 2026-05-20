@@ -5,6 +5,7 @@ import { TICKER_ITEMS } from '../../constants'
 
 const navItems = [
   { name: 'Home', path: '/' },
+  { name: 'Issues', path: '/india-problems' },
   { name: 'Manifesto', path: '/manifesto' },
   { name: 'Members', path: '/members' },
   { name: 'Meetings', path: '/meetings' },
@@ -46,7 +47,7 @@ export default function Header() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 sm:h-18 lg:h-20">
               <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 overflow-hidden rounded-sm">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0 overflow-hidden rounded-full border-2 border-ink">
                   <img src="/img/logo.jpeg" alt="CJP Logo" className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col leading-none">

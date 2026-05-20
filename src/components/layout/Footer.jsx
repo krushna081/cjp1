@@ -30,7 +30,7 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 overflow-hidden rounded-sm">
+              <div className="w-10 h-10 overflow-hidden rounded-full border border-paper/30">
                 <img src="/img/logo.jpeg" alt="CJP Logo" className="w-full h-full object-cover" />
               </div>
               <div>

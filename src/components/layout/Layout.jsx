@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
+import FloatingImproveButton from '../FloatingImproveButton'
 import { motion } from 'framer-motion'
 
 const pageVariants = {
@@ -38,6 +39,8 @@ export default function Layout() {
       </motion.main>
       
       <Footer />
+      
+      <FloatingImproveButton />
     </div>
   )
 }

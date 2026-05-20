@@ -395,7 +395,7 @@ export default function HomePage() {
             transition={{ duration: 0.5 }}
           >
             <div className="flex justify-center mb-4">
-              <img src="/img/logo.jpeg" alt="CJP" className="w-16 h-16 rounded-full border-2 border-paper" />
+              <img src="/img/logo.jpeg" alt="CJP" className="w-16 h-16 rounded-full border-2 border-paper object-cover" />
             </div>
             <h3 className="font-display text-[28px] sm:text-[36px] lg:text-[48px] leading-[0.95] text-paper mb-3">
               STRONGER TOGETHER

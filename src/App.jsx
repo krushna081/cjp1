@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Layout } from './components/layout'
-import { HomePage, MembersPage, MeetingsPage, ManifestoPage, FounderPage, ContactPage, JoinPage } from './pages'
+import { HomePage, MembersPage, MeetingsPage, ManifestoPage, FounderPage, ContactPage, JoinPage, IndiaProblemsPage, WomenSafetyPage, ImproveCJPPage } from './pages'
 
 function App() {
   return (
@@ -17,6 +17,14 @@ function App() {
             <Route path="founder" element={<FounderPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="join" element={<JoinPage />} />
+            <Route path="india-problems" element={<IndiaProblemsPage />} />
+            <Route path="issues" element={<IndiaProblemsPage />} />
+            <Route path="problem-statement" element={<IndiaProblemsPage />} />
+            <Route path="women-safety" element={<WomenSafetyPage />} />
+            <Route path="justice-crisis" element={<WomenSafetyPage />} />
+            <Route path="improve-cjp" element={<ImproveCJPPage />} />
+            <Route path="community-feedback" element={<ImproveCJPPage />} />
+            <Route path="future-of-cjp" element={<ImproveCJPPage />} />
           </Route>
         </Routes>
       </AnimatePresence>
