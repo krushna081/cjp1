@@ -2,7 +2,6 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
-import { Resend } from 'resend'
 
 dotenv.config()
 
@@ -12,13 +11,18 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cockroach-janta-party'
+const MONGODB_URI = process.env.MONGODB_URI
 
-mongoose.connect(MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err))
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+if (MONGODB_URI) {
+  mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err.message))
+} else {
+  console.log('MongoDB URI not configured')
+}
 
 const TOTAL_INDIAN_STATES = 28
 
@@ -34,7 +38,7 @@ const memberSchema = new mongoose.Schema({
   lazy: { type: String, required: true },
   cockroach: { type: String, required: true },
   joinedAt: { type: Date, default: Date.now },
-})
+}, { timestamps: true })
 
 const meetingSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -45,74 +49,15 @@ const meetingSchema = new mongoose.Schema({
   meetingType: { type: String, enum: ['rally', 'meeting', 'twitter_space', 'volunteer'], default: 'meeting' },
   joinLink: String,
   createdAt: { type: Date, default: Date.now },
-})
+}, { timestamps: true })
 
-const Member = mongoose.model('Member', memberSchema)
-const Meeting = mongoose.model('Meeting', meetingSchema)
-
-const sendNotificationEmail = async (memberData) => {
-  if (!process.env.RESEND_API_KEY) {
-    console.log('Resend API key not configured, skipping email notification')
-    return
-  }
-
-  try {
-    await resend.emails.send({
-      from: 'CJP <onboarding@resend.dev>',
-      to: ['hello@cockroachjantaparty.in', memberData.email],
-      subject: 'Welcome to Cockroach Janta Party! 🪳',
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; background: #F4EBD7; margin: 0; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: #fff; border: 3px solid #1A1108; }
-            .header { background: #1A1108; color: #F4EBD7; padding: 30px; text-align: center; }
-            .header h1 { font-family: Impact, sans-serif; margin: 0; font-size: 32px; }
-            .content { padding: 30px; }
-            .footer { background: #EADFC4; padding: 20px; text-align: center; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>COCKROACH JANTA PARTY</h1>
-              <p>कॉकरोच जनता पार्टी</p>
-            </div>
-            <div class="content">
-              <h2>Welcome to the Swarm, ${memberData.fullName}!</h2>
-              <p>Your membership has been successfully submitted.</p>
-              <p><strong>Details:</strong></p>
-              <ul>
-                <li>Name: ${memberData.fullName}</li>
-                <li>State: ${memberData.state}</li>
-                <li>District: ${memberData.district}</li>
-              </ul>
-              <p>We will be in touch soon. In the meantime, stay angry, stay online, stay lazy.</p>
-              <p>🪳 Together We Survive</p>
-            </div>
-            <div class="footer">
-              <p>This is a work of satire. Cockroach Janta Party is not a real political party.</p>
-              <p>&copy; 2026 Cockroach Janta Party · All rants reserved.</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
-    })
-    console.log('Notification email sent successfully')
-  } catch (error) {
-    console.error('Failed to send notification email:', error)
-  }
-}
+const Member = mongoose.models.Member || mongoose.model('Member', memberSchema)
+const Meeting = mongoose.models.Meeting || mongoose.model('Meeting', meetingSchema)
 
 app.post('/api/members', async (req, res) => {
   try {
     const member = new Member(req.body)
     await member.save()
-    
-    sendNotificationEmail(req.body)
     
     res.status(201).json({ 
       success: true, 
@@ -218,6 +163,10 @@ app.post('/api/meetings', async (req, res) => {
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() })
+})
+
+app.get('/', (req, res) => {
+  res.json({ message: 'CJP API Running', timestamp: new Date().toISOString() })
 })
 
 app.listen(PORT, () => {
