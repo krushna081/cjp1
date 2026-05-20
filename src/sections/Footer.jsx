@@ -73,8 +73,8 @@ function Footer() {
                 Follow
               </h4>
               <ul className="flex flex-col gap-3">
-                <li><a href="#" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">Twitter / X</a></li>
-                <li><a href="#" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">Instagram</a></li>
+                <li><a href="https://x.com/CJP_2029" target="_blank" rel="noopener noreferrer" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">Twitter / X</a></li>
+                <li><a href="https://www.instagram.com/cockroachjantaparty?igsh=MWR6d253bDE5NDRmMQ==" target="_blank" rel="noopener noreferrer" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">Instagram</a></li>
                 <li><a href="#" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">YouTube</a></li>
                 <li><a href="#" className="font-sans text-[15px] text-paper/70 hover:text-saffron-2 transition-colors">Telegram</a></li>
               </ul>

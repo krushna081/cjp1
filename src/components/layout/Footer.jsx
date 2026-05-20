@@ -96,9 +96,9 @@ export default function Footer() {
               Follow Us
             </h4>
             <ul className="space-y-2">
-              {Object.entries(SOCIAL_LINKS).map(([key, { label }]) => (
+              {Object.entries(SOCIAL_LINKS).map(([key, { url, label }]) => (
                 <li key={key}>
-                  <a href="#" className="font-sans text-sm text-paper/70 hover:text-saffron-2 transition-colors inline-flex items-center gap-2">
+                  <a href={url} target="_blank" rel="noopener noreferrer" className="font-sans text-sm text-paper/70 hover:text-saffron-2 transition-colors inline-flex items-center gap-2">
                     <span className="w-1 h-1 bg-saffron-2 rounded-full" />
                     {label}
                   </a>

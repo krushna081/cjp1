@@ -239,8 +239,8 @@ export const LOCATION_DATA = {
 }
 
 export const SOCIAL_LINKS = {
-  twitter: { url: '#', label: 'Twitter / X' },
-  instagram: { url: '#', label: 'Instagram' },
+  twitter: { url: 'https://x.com/CJP_2029', label: 'Twitter / X' },
+  instagram: { url: 'https://www.instagram.com/cockroachjantaparty?igsh=MWR6d253bDE5NDRmMQ==', label: 'Instagram' },
   telegram: { url: '#', label: 'Telegram' },
   youtube: { url: '#', label: 'YouTube' }
 }
