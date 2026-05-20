@@ -136,34 +136,34 @@ export default function IndiaProblemsPage() {
   return (
     <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
       {/* Hero */}
-      <section className="relative bg-ink text-paper min-h-screen flex items-center overflow-hidden">
+      <section className="relative bg-ink text-paper min-h-screen flex items-center overflow-hidden py-12 sm:py-16">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-ink via-ink-2 to-ink" />
           <div className="absolute inset-0 opacity-10" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
-          {[...Array(20)].map((_, i) => (
-            <motion.div key={i} className="absolute w-1 h-1 bg-saffron-2/30 rounded-full" initial={{ x: Math.random() * 100 + '%', y: '100%' }} animate={{ y: ['100%', '-10%'] }} transition={{ duration: Math.random() * 10 + 15, repeat: Infinity, ease: 'linear' }} style={{ left: Math.random() * 100 + '%' }} />
+          {[...Array(10)].map((_, i) => (
+            <motion.div key={i} className="absolute w-1 h-1 bg-saffron-2/30 rounded-full hidden sm:block" initial={{ x: Math.random() * 100 + '%', y: '100%' }} animate={{ y: ['100%', '-10%'] }} transition={{ duration: Math.random() * 10 + 15, repeat: Infinity, ease: 'linear' }} style={{ left: Math.random() * 100 + '%' }} />
           ))}
         </div>
-        <div className="max-w-7xl mx-auto px-4 py-20 relative z-10">
-          <div className="text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-block mb-6">
-              <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-saffron-2 border border-saffron-2/50 px-4 py-2">Campaign 2026</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative z-10 w-full">
+          <div className="text-center max-w-3xl mx-auto">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-block mb-4 sm:mb-6">
+              <span className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] uppercase text-saffron-2 border border-saffron-2/50 px-3 sm:px-4 py-1.5 sm:py-2">Campaign 2026</span>
             </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-display text-[40px] sm:text-[56px] lg:text-[80px] xl:text-[96px] leading-[0.95] mb-6">India's Problem<br /><span className="text-saffron-2">Statement — 2026</span></motion.h1>
-            <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="font-sans text-lg sm:text-xl text-paper/70 max-w-2xl mx-auto mb-10">A generation connected to the internet, but disconnected from opportunity.</motion.p>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="overflow-hidden bg-saffron-deep/20 py-3 mb-10">
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="font-display text-[32px] xs:text-[38px] sm:text-[48px] md:text-[56px] lg:text-[72px] xl:text-[88px] leading-[1] sm:leading-[0.95] mb-4 sm:mb-6 px-2">India's Problem<span className="block sm:inline"><br className="hidden sm:block" /></span><span className="text-saffron-2">Statement — 2026</span></motion.h1>
+            <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="font-sans text-sm sm:text-base md:text-lg text-paper/70 max-w-xl mx-auto mb-6 sm:mb-10 px-4">A generation connected to the internet, but disconnected from opportunity.</motion.p>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="overflow-hidden bg-saffron-deep/20 py-2 sm:py-3 mb-6 sm:mb-10 -mx-4">
               <motion.div className="flex whitespace-nowrap" animate={{ x: ['0%', '-50%'] }} transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}>
-                {[...Array(10)].map((_, i) => (<span key={i} className="font-mono text-sm tracking-wider mx-8">UNEMPLOYMENT INFLATION FARMER DISTRESS CORRUPTION POLLUTION INEQUALITY ✦</span>))}
+                {[...Array(10)].map((_, i) => (<span key={i} className="font-mono text-[10px] sm:text-sm tracking-wider mx-4 sm:mx-8">UNEMPLOYMENT INFLATION FARMER DISTRESS CORRUPTION POLLUTION INEQUALITY ✦</span>))}
               </motion.div>
             </motion.div>
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="flex flex-wrap justify-center gap-4">
-              <Link to="/join" className="inline-flex items-center gap-2 bg-saffron-deep text-paper font-condensed font-bold text-xs tracking-[0.18em] uppercase px-6 py-3 border-2 border-ink shadow-[4px_4px_0_var(--saffron)] hover:shadow-[2px_2px_0_var(--saffron)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">Join Movement <span>→</span></Link>
-              <Link to="/improve-cjp" className="inline-flex items-center gap-2 bg-transparent text-paper font-condensed font-bold text-xs tracking-[0.18em] uppercase px-6 py-3 border-2 border-paper/50 hover:border-paper transition-all">Share Ideas</Link>
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="flex flex-wrap justify-center gap-3 sm:gap-4">
+              <Link to="/join" className="inline-flex items-center gap-2 bg-saffron-deep text-paper font-condensed font-bold text-[11px] sm:text-xs tracking-[0.15em] sm:tracking-[0.18em] uppercase px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-ink shadow-[4px_4px_0_var(--saffron)] hover:shadow-[2px_2px_0_var(--saffron)] hover:translate-x-0.5 hover:translate-y-0.5 transition-all">Join Movement <span>→</span></Link>
+              <Link to="/improve-cjp" className="inline-flex items-center gap-2 bg-transparent text-paper font-condensed font-bold text-[11px] sm:text-xs tracking-[0.15em] sm:tracking-[0.18em] uppercase px-5 sm:px-6 py-2.5 sm:py-3 border-2 border-paper/50 hover:border-paper transition-all">Share Ideas</Link>
             </motion.div>
           </div>
         </div>
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-          <div className="w-6 h-10 border-2 border-paper/50 rounded-full flex justify-center pt-2"><div className="w-1 h-2 bg-paper/50 rounded-full" /></div>
+        <motion.div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+          <div className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-paper/50 rounded-full flex justify-center pt-1.5 sm:pt-2"><div className="w-1 h-1.5 sm:w-1 sm:h-2 bg-paper/50 rounded-full" /></div>
         </motion.div>
       </section>
 

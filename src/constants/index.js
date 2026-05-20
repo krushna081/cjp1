@@ -4,6 +4,7 @@ export const INDIA_STATES = [
   'Assam',
   'Bihar',
   'Chhattisgarh',
+  'Delhi',
   'Goa',
   'Gujarat',
   'Haryana',
@@ -11,8 +12,8 @@ export const INDIA_STATES = [
   'Jharkhand',
   'Karnataka',
   'Kerala',
-  'Madhya Pradesh',
   'Maharashtra',
+  'Madhya Pradesh',
   'Manipur',
   'Meghalaya',
   'Mizoram',
@@ -27,9 +28,14 @@ export const INDIA_STATES = [
   'Uttar Pradesh',
   'Uttarakhand',
   'West Bengal',
-  'Delhi',
-  'Chandigarh',
-  'Puducherry'
+  'Andaman & Nicobar (UT)',
+  'Chandigarh (UT)',
+  'Dadra & Nagar Haveli (UT)',
+  'Daman & Diu (UT)',
+  'Jammu & Kashmir (UT)',
+  'Lakshadweep (UT)',
+  'Ladakh (UT)',
+  'Puducherry (UT)'
 ]
 
 export const LOCATION_DATA = {
