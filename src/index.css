@@ -152,3 +152,22 @@ select {
   background-size: 16px;
   padding-right: 40px;
 }
+
+@keyframes wiggleLeft {
+  0% { transform: rotate(-5deg); }
+  100% { transform: rotate(5deg); }
+}
+
+@keyframes wiggleRight {
+  0% { transform: rotate(5deg); }
+  100% { transform: rotate(-5deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.05); }
+}
+
+.cockroach-follower {
+  transform: translate(-50%, -50%);
+}
